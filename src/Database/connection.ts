@@ -1,12 +1,12 @@
 import knex from "knex";
-
+import {database,password} from "../config";
 const db = knex({
   client: "mysql",
   connection: {
     host: "localhost",
     user: "root",
-    password: "",
-    database: "social_media",
+    password: password,
+    database: database,
     port: 3306,
   },
   useNullAsDefault: true,

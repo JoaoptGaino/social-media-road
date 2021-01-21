@@ -5,6 +5,7 @@ export async function up(knex: Knex) {
     table.increments("id").primary();
     table
       .integer("post_id")
+      .unsigned()
       .notNullable()
       .references("id")
       .inTable("posts")

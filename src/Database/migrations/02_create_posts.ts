@@ -3,14 +3,8 @@ import Knex from "knex";
 export async function up(knex: Knex) {
   return knex.schema.createTable("posts", (table) => {
     table.increments("id").primary();
-    table
-      .integer("user_id")
-      .notNullable()
-      .references("id")
-      .inTable("users")
-      .onUpdate("CASCADE")
-      .onDelete("CASCADE");
     table.string("post").notNullable();
+    table.integer("user_id").unsigned().references("id").inTable("users")
     table
       .timestamp("created")
       .defaultTo(knex.raw("CURRENT_TIMESTAMP"))
