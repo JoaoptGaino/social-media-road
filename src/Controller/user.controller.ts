@@ -28,7 +28,9 @@ export default class UsersController {
   }
   async loginAuthentication(req: Request, res: Response) {
     const { email, password } = req.body;
-
+    if(!email || !password){
+      return res.status(500).json({message:"Blank spaces"});
+    }
     const userInDB = await db("users").select("*").where("email", "=", email);
     if (userInDB.length > 0) {
       const hashPass = await db("users").select("password");
