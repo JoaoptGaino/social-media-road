@@ -1,12 +1,12 @@
 import path from 'path';
-import {database,password} from "./src/config";
+import config from "./src/config/config";
 module.exports = {
   client: "mysql",
   connection: {
     host: "localhost",
     user: "root",
-    password: password,
-    database: database,
+    password: config.password,
+    database: config.database,
     port: 3306,
   },
   migrations:{

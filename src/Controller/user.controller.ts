@@ -1,12 +1,14 @@
 import { Request, Response } from "express";
 import db from "../Database/connection";
 import Authentication from "../authentication";
+import * as jwt from "jsonwebtoken";
+import config from "../config/config";
 
 const auth = new Authentication();
 
 export default class UsersController {
   async index(req: Request, res: Response) {
-    const users = await db("users").select("id","email", "username");
+    const users = await db("users").select("id", "email", "username");
 
     res.status(200).json(users);
   }
@@ -28,8 +30,8 @@ export default class UsersController {
   }
   async loginAuthentication(req: Request, res: Response) {
     const { email, password } = req.body;
-    if(!email || !password){
-      return res.status(500).json({message:"Blank spaces"});
+    if (!email || !password) {
+      return res.status(500).json({ message: "Blank spaces" });
     }
     const userInDB = await db("users").select("*").where("email", "=", email);
     if (userInDB.length > 0) {
@@ -39,8 +41,14 @@ export default class UsersController {
         password,
         hashPass[0].password
       );
+
       if (isValid) {
-        return res.status(200).json({ message: "Authenticated" });
+        const token = jwt.sign(
+          { userId: userInDB[0].id, userName: userInDB[0].username },
+          config.jwtSecret,
+          { expiresIn: "1h" }
+        );
+        return res.status(200).json({ message: "Authenticated",token });
       } else {
         return res.status(401).json({ message: "Not authenticated" });
       }
